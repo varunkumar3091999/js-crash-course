@@ -6,15 +6,13 @@ function ageInDays() {
 	var birthYear = prompt("what year are you born?");
 	var ageInDayss = (2020 - birthYear) * 365;
 
-	var h1 = document.createElement("h1")
+	var h1 = document.createElement("h1");
 
-	var textAnswer = document.createTextNode(`you are ${ageInDayss} days old`)
+	var textAnswer = document.createTextNode(`you are ${ageInDayss} days old`);
 
 	h1.setAttribute('id', 'ageInDays');
 	h1.appendChild(textAnswer);
 	document.getElementById("flex-box-result").appendChild(h1);
-
-	console.log(ageInDayss)
 }
 
 
@@ -25,7 +23,6 @@ function reset() {
 
 //img generator
 function generateImg() {
-	console.log("jbvdfkh")
 	var image = document.createElement("img");
 	var div = document.getElementById("flex-image")
 	image.src = "static/images/img.jpeg"
@@ -179,4 +176,114 @@ function randomColors() {
 	 	allButtons[i].classList.add(choices[Math.floor(Math.random() * 4)])
 	 }
 
+}
+
+
+
+//blackjack game
+
+let blackjackGame = {
+	"you": {"scoreSpan": "#your-blackjack-result", "div": "#your-box", 'score': 0},
+	"dealer": {"scoreSpan": "#dealer-blackjack-result ", "div": "#dealer-box", 'score': 0},
+
+	"cards":["2", "3", "4", "5", "6", "7", "8", "9", "10", "k", "j", "q", "a"],
+	"cardsMap" : {"2": 2, "3": 3, "4": 4, "5": 5, "6": 6, "7": 7, "8": 8, "9": 9, "10": 10, "k": 10, "j": 10, "q": 10, "a": [1, 11] }
+}
+
+const hitSound = new Audio("static/sounds/swish.m4a")
+
+const YOU = blackjackGame["you"];
+const DEALER = blackjackGame["dealer"];
+
+
+document.querySelector("#blackjack-hit-button").addEventListener("click", blackjackHit);
+
+document.querySelector("#blackjack-stand-button").addEventListener("click", dealerLogic );
+
+document.querySelector("#blackjack-deal-button").addEventListener("click", blackjackDeal);
+
+
+function blackjackHit() {
+
+	 let card = randomCard()
+	 console.log(card)
+	showCard(card, YOU);
+	updateScore(card, YOU);
+	showScore(YOU);
+	console.log(YOU["score"]);
+}
+
+function showCard(card, activePlayer ) {
+
+	if(activePlayer['score'] <= 21){
+		let cardImage = document.createElement('img');
+		cardImage.src = `static/cardImages/${card}.png`;
+		document.querySelector(activePlayer['div']).appendChild(cardImage);
+		hitSound.play()
+	} 
+}
+
+
+function blackjackDeal() {
+	 let yourImages = document.querySelector("#your-box").querySelectorAll("img");
+	 let dealerImages = document.querySelector("#dealer-box").querySelectorAll("img")
+
+	 for(let i = 0; i < yourImages.length; i++) {
+		 yourImages[i].remove()   
+	 }
+
+	 for(let i = 0; i < dealerImages.length; i++) {
+		dealerImages[i].remove()
+	}
+
+
+	YOU['score'] = 0;
+	DEALER['score'] = 0;
+
+	document.querySelector("#your-blackjack-result").textContent = 0; 
+	document.querySelector("#dealer-blackjack-result").textContent = 0; 
+	document.querySelector("#your-blackjack-result").style.color = '#fff';
+	document.querySelector("#dealer-blackjack-result").style.color = '#fff';
+}
+
+function randomCard() {
+	 var randomIndex = Math.floor(Math.random() * 13);
+
+	 return blackjackGame["cards"][randomIndex];
+}
+
+function updateScore(card, activePlayer) {
+
+	if(card === "a") {
+		if(activePlayer["score"] + blackjackGame['cardsMap'][card][1] <= 21) {
+			activePlayer["score"] += blackjackGame['cardsMap'][card][1]; 
+		} else {
+			activePlayer["score"] += blackjackGame['cardsMap'][card][0]; 
+		}
+	} else {
+		 activePlayer["score"] += blackjackGame["cardsMap"][card];
+	} 	
+}
+
+function showScore(activePlayer) {
+
+	if(activePlayer['score']  > 21) {
+		document.querySelector(activePlayer['scoreSpan']).textContent = 'BUST';
+		document.querySelector(activePlayer['scoreSpan']).style.color = 'red';
+	} else {
+	 	document.querySelector(activePlayer["scoreSpan"]).textContent = activePlayer["score"];
+	}
+}
+
+function dealerLogic() {
+	let card = randomCard();
+	showCard(card, DEALER);
+	updateScore(card, DEALER);
+	showScore(DEALER);
+}
+
+function computeWinner() {
+	let winner;
+
+	if(YOU['score']  = 21  )
 }

@@ -34,6 +34,12 @@
 	flex: 1;
 }
 
+.flex-blackjack-row-1 img , .flex-blackjack-row-2 img {
+	height: 100px;
+	width: 75px;
+	margin: 10px 20px;
+}
+
 
 .flex-black-jack-row-2 button {
 	border: 1px solid black;
